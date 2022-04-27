@@ -1,6 +1,7 @@
 package com.example.springtest.student;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,14 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table
 public class Student {
@@ -32,13 +34,25 @@ public class Student {
    private String name;
    private String email;
    private LocalDate dob;
+   @Transient
+   @Getter(AccessLevel.NONE)
    private Integer age;
    
-   public Student(String name, String email, LocalDate dob, Integer age) {
+   public Student(Long id, String name, String email, LocalDate dob) {
+      this.id = id;
       this.name = name;
       this.email = email;
       this.dob = dob;
-      this.age = age;
    }
- 
+   
+   public Student(String name, String email, LocalDate dob) {
+      this.name = name;
+      this.email = email;
+      this.dob = dob;
+   }
+   
+   public Integer getAge() {
+      return Period.between(this.dob, LocalDate.now()).getYears();
+   }
+   
 }
